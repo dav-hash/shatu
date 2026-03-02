@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Shatu ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #1a4d2e;
+            --light-green: #4f9d69;
+            --accent-green: #7cb342;
+            --glow-green: #a8e6a3;
+            --bg-dark: #0a0f0a;
+            --text-light: #e8f5e9;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            overflow: hidden;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Fireworks Container */
+        #fireworksCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .firework-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: explode 1.5s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--x), var(--y)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Login Page */
+        #loginPage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a3d2c 0%, #1a4d2e 50%, #2d5016 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease;
+        }
+
+        #loginPage.hidden {
+            opacity: 0;
+            pointer-events: none;
+            display: none !important;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px);
+            padding: 60px 50px;
+            border-radius: 30px;
+            border: 2px solid rgba(125, 179, 66, 0.3);
+            box-shadow: 0 20px 80px rgba(125, 179, 66, 0.3),
+                        0 0 100px rgba(125, 179, 66, 0.15) inset;
+            animation: float 4s ease-in-out infinite;
+            min-width: 450px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .login-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.8em;
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, var(--accent-green), var(--glow-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 3px;
+            animation: glow-pulse 2s ease-in-out infinite;
+            font-weight: 600;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 20px var(--accent-green)); 
+            }
+            50% { 
+                filter: drop-shadow(0 0 35px var(--glow-green)); 
+            }
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 12px;
+            color: var(--glow-green);
+            font-size: 1.2em;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 22px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(125, 179, 66, 0.3);
+            border-radius: 15px;
+            color: var(--text-light);
+            font-size: 1.15em;
+            font-family: 'Crimson Text', serif;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder {
+            color: rgba(232, 245, 233, 0.4);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 30px rgba(125, 179, 66, 0.4);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .date-inputs {
+            display: flex;
+            gap: 15px;
+        }
+
+        .date-inputs input {
+            width: calc(33.333% - 10px);
+            text-align: center;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            margin-top: 30px;
+            background: linear-gradient(135deg, var(--light-green), var(--accent-green));
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.3em;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(125, 179, 66, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(125, 179, 66, 0.5);
+        }
+
+        .error-message {
+            color: #ffffff;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.1em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        /* Terminal Page */
+        #terminalPage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 900;
+        }
+
+        #terminalPage.active {
+            display: flex;
+        }
+
+        .terminal-text {
+            font-family: 'Courier New', monospace;
+            font-size: 2em;
+            color: var(--accent-green);
+            text-align: center;
+            line-height: 1.6;
+            text-shadow: 0 0 20px var(--accent-green);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 12px;
+            height: 1.2em;
+            background: var(--accent-green);
+            margin-left: 5px;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Loading Animation */
+        .loading-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .loading-container.active {
+            display: flex;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            border: 6px solid rgba(125, 179, 66, 0.2);
+            border-top: 6px solid var(--accent-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.5em;
+            color: var(--glow-green);
+            letter-spacing: 2px;
+        }
+
+        /* Welcome Button */
+        .welcome-button {
+            display: none;
+            padding: 25px 60px;
+            background: linear-gradient(135deg, var(--light-green), var(--accent-green));
+            border: 3px solid var(--glow-green);
+            border-radius: 20px;
+            color: white;
+            font-size: 2em;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 50px rgba(125, 179, 66, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .welcome-button.active {
+            display: inline-block;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .welcome-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 20px 60px rgba(125, 179, 66, 0.6);
+        }
+
+        /* Gallery Page */
+        #galleryPage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0f0a 0%, #1a2f1a 100%);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 800;
+        }
+
+        #galleryPage.active {
+            display: flex;
+        }
+
+        .gallery-container {
+            width: 90%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .media-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(125, 179, 66, 0.6),
+                        0 0 120px rgba(168, 230, 163, 0.3);
+            animation: glow-border 3s ease-in-out infinite;
+        }
+
+        @keyframes glow-border {
+            0%, 100% { 
+                box-shadow: 0 0 60px rgba(125, 179, 66, 0.6),
+                            0 0 120px rgba(168, 230, 163, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 80px rgba(125, 179, 66, 0.8),
+                            0 0 150px rgba(168, 230, 163, 0.5);
+            }
+        }
+
+        .media-container img,
+        .media-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-height: 500px;
+            object-fit: contain;
+        }
+
+        .slide-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.8em;
+            color: var(--text-light);
+            text-align: center;
+            line-height: 1.8;
+            max-width: 700px;
+            padding: 0 20px;
+            min-height: 80px;
+        }
+
+        .next-button {
+            padding: 18px 50px;
+            background: linear-gradient(135deg, var(--light-green), var(--accent-green));
+            border: 2px solid var(--glow-green);
+            border-radius: 15px;
+            color: white;
+            font-size: 1.4em;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(125, 179, 66, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+
+        .next-button.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .next-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(125, 179, 66, 0.5);
+        }
+
+        /* Video Collage Grid */
+        .video-collage {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .video-collage video {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
+            max-height: none;
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fireworks Canvas -->
+    <div id="fireworksCanvas"></div>
+
+    <!-- Login Page -->
+    <div id="loginPage">
+        <div class="login-container">
+            <h1 class="login-title">Welcome</h1>
+            <div class="input-group">
+                <label class="input-label">Username</label>
+                <input type="text" id="username" placeholder="Enter username">
+            </div>
+            <div class="input-group">
+                <label class="input-label">What's the date today?</label>
+                <div class="date-inputs">
+                    <input type="number" id="day" placeholder="Day" min="1" max="31">
+                    <input type="number" id="month" placeholder="Month" min="1" max="12">
+                    <input type="number" id="year" placeholder="Year" min="2020" max="2030">
+                </div>
+            </div>
+            <button class="login-btn" onclick="login()">Enter</button>
+            <div class="error-message" id="errorMessage">زانیاریەکانت هەڵەیە تکایە دڵنیاببەرەوە لە دروستی زانیاریەکان</div>
+        </div>
+    </div>
+
+    <!-- Terminal Page -->
+    <div id="terminalPage">
+        <div class="terminal-text" id="terminalText"></div>
+    </div>
+
+    <!-- Gallery Page -->
+    <div id="galleryPage">
+        <div class="gallery-container">
+            <div class="media-container" id="mediaContainer"></div>
+            <div class="slide-text" id="slideText"></div>
+            <button class="next-button" id="nextButton" onclick="nextSlide()">Next</button>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="birthMusic" loop>
+        <source src="birth.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="safarMusic" loop>
+        <source src="safar.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // ─── Fireworks ────────────────────────────────────────────────
+        function createFirework() {
+            const canvas = document.getElementById('fireworksCanvas');
+            const colors = ['#7cb342', '#a8e6a3', '#4f9d69', '#66bb6a'];
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * (window.innerHeight * 0.7);
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework-particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                const angle = (Math.PI * 2 * i) / 30;
+                const velocity = 50 + Math.random() * 100;
+                particle.style.setProperty('--x', Math.cos(angle) * velocity + 'px');
+                particle.style.setProperty('--y', Math.sin(angle) * velocity + 'px');
+                canvas.appendChild(particle);
+                setTimeout(() => particle.remove(), 1500);
+            }
+        }
+        let fireworksInterval = setInterval(createFirework, 800);
+
+        // ─── Login ────────────────────────────────────────────────────
+        function login() {
+            const username = document.getElementById('username').value.toLowerCase().trim();
+            const day   = document.getElementById('day').value;
+            const month = document.getElementById('month').value;
+            const year  = document.getElementById('year').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (username === 'koala' && day === '3' && month === '3' && year === '2026') {
+                clearInterval(fireworksInterval);
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('terminalPage').classList.add('active');
+                typeTerminalText();
+            } else {
+                errorMessage.classList.add('show');
+                setTimeout(() => errorMessage.classList.remove('show'), 2000);
+            }
+        }
+
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !document.getElementById('loginPage').classList.contains('hidden')) {
+                login();
+            }
+        });
+
+        // ─── Terminal ─────────────────────────────────────────────────
+        function typeTerminalText() {
+            const lines = [
+                "Welcome Koala Gyann,",
+                "Today is your birthday,",
+                "Happy birthday Rohakamm"
+            ];
+            const terminalText = document.getElementById('terminalText');
+            terminalText.innerHTML = '';
+            let lineIndex = 0;
+            let charIndex = 0;
+            const spans = lines.map(() => {
+                const span = document.createElement('div');
+                terminalText.appendChild(span);
+                return span;
+            });
+            function typeChar() {
+                if (lineIndex < lines.length) {
+                    if (charIndex < lines[lineIndex].length) {
+                        spans[lineIndex].textContent += lines[lineIndex][charIndex];
+                        charIndex++;
+                        setTimeout(typeChar, 80);
+                    } else {
+                        lineIndex++;
+                        charIndex = 0;
+                        setTimeout(typeChar, 150);
+                    }
+                } else {
+                    const cursor = document.createElement('span');
+                    cursor.className = 'cursor';
+                    spans[spans.length - 1].appendChild(cursor);
+                    setTimeout(showLoading, 1000);
+                }
+            }
+            typeChar();
+        }
+
+        // ─── Loading ──────────────────────────────────────────────────
+        function showLoading() {
+            const terminalText = document.getElementById('terminalText');
+            terminalText.innerHTML = `
+                <div class="loading-container active">
+                    <div class="loader"></div>
+                    <div class="loading-text">تکایە چەند چرکەیەک بوەستە...</div>
+                </div>`;
+            setTimeout(() => {
+                terminalText.innerHTML = '<button class="welcome-button active" onclick="startGallery()">کلیک لێرە بکە..</button>';
+                document.getElementById('birthMusic').play().catch(() => {});
+            }, 8000);
+        }
+
+        // ─── Slides ───────────────────────────────────────────────────
+        const slides = [
+            { type: 'video', src: 'video1.mp4',  text: "ئەزانیت ئەمڕۆ جوانترین ڕۆژی ساڵە؟ چوونکە کچە جوان و ئاقڵەکەمان ئەمڕۆ لەدایک بووە" },
+            { type: 'video', src: 'video2.mp4',  text: 'لەدایکبوونت پیرۆزبێت ڕۆ‌‌‌‌حە شیرینەکەم تەمەنت هەزار ساڵ بێت دوور لە ناخۆشی لای خودا ئەپاڕێمەوە کە هەمیشە دڵخۆش و سەلامەت بیت و بمێنیت بۆم' },
+            { type: 'video', src: 'video3.mp4',  text: "" },
+            { type: 'video', src: 'video4.mp4',  text: 'بمێنیت بۆمان باشترین هاوڕێی ژیانم ، سپاسگوزاری خودام کە تۆی پێ ناساندم شاتوو گیان ، جوانترین ڕووداوی ٢٠٢٥ و جوانترین ڕووداوی ژیانم' },
+            { type: 'video', src: 'video5.mp4',  text: 'سپاس بۆ ئەوەی لەو ساڵە خراپەدا هاتیت و قەرەبووی هەموو شتێکت کردەوە و هاوکارم بوویت و بەدەممەوە بوویت، بۆ هەمیشە سپاسگوزاری خودام کە هاوڕێیەتی تۆی پێ بەخشیم' },
+            { type: 'video', src: 'video6.mp4',  text: '
+لەدایک بوونت پیرۆزبێت بە مانای وشە « باشترین هاوڕێی ژیانم » ، قورسە ئەو وشەیە بۆ من و نەشم بەخشیوە بە هیچ کەسێک ، بەس جیاوازیت و تاکە مرۆڤیت ئەتوانم پێت بڵێم بە مانای وشە « باشترین هاوڕێی تەواوی ژیانم💚»
+' },
+            { type: 'video', src: 'video7.mp4',  text: 'Your kindness and warmth touch my soul in the most beautiful ways.' },
+            { type: 'video', src: 'video8.mp4',  text: 'With you, I discovered what it truly means to love and be loved.' },
+            { type: 'video', src: 'video9.mp4',  text: 'You are the melody my heart has been singing all along.' },
+            { type: 'video', src: 'video10.mp4', text: 'Together, we create a love story that is uniquely and beautifully ours.' }
+        ];
+
+        const collageVideos = [
+            'video1.mp4','video2.mp4','video3.mp4','video4.mp4','video5.mp4',
+            'video6.mp4','video7.mp4','video8.mp4','video9.mp4','video10.mp4'
+        ];
+
+        let currentSlide = 0;
+        let typingInProgress = false;
+
+        function startGallery() {
+            document.getElementById('terminalPage').classList.remove('active');
+            document.getElementById('galleryPage').classList.add('active');
+            showSlide();
+        }
+
+        function showSlide() {
+            const mediaContainer = document.getElementById('mediaContainer');
+            const slideText      = document.getElementById('slideText');
+            const nextButton     = document.getElementById('nextButton');
+
+            // Reset button state
+            nextButton.classList.remove('show');
+            slideText.textContent = '';
+            typingInProgress = true;
+
+            const slide = slides[currentSlide];
+
+            // All videos: muted (sound comes from music only), no controls
+            mediaContainer.innerHTML = `<video src="${slide.src}" autoplay muted playsinline></video>`;
+
+            typeSlideText(slide.text);
+        }
+
+        function typeSlideText(text) {
+            const slideText  = document.getElementById('slideText');
+            const nextButton = document.getElementById('nextButton');
+            slideText.textContent = '';
+
+            // If no text, show the button immediately
+            if (!text || text.length === 0) {
+                typingInProgress = false;
+                setTimeout(() => nextButton.classList.add('show'), 500);
+                return;
+            }
+
+            let index = 0;
+            function typeChar() {
+                if (index < text.length) {
+                    slideText.textContent += text[index];
+                    index++;
+                    setTimeout(typeChar, 50);
+                } else {
+                    typingInProgress = false;
+                    setTimeout(() => nextButton.classList.add('show'), 500);
+                }
+            }
+            typeChar();
+        }
+
+        // ─── FIX: nextSlide properly routes to collage on last slide ──
+        function nextSlide() {
+            const nextButton = document.getElementById('nextButton');
+            // Prevent double clicks
+            nextButton.classList.remove('show');
+
+            if (currentSlide < slides.length - 1) {
+                // Not the last slide — go to next slide
+                currentSlide++;
+                showSlide();
+            } else {
+                // Last slide — show the collage
+                showCollagePopup();
+            }
+        }
+
+        // ─── Collage ──────────────────────────────────────────────────
+        function showCollagePopup() {
+            // Switch music
+            const birthMusic = document.getElementById('birthMusic');
+            const safarMusic = document.getElementById('safarMusic');
+            birthMusic.pause();
+            safarMusic.play().catch(() => {});
+
+            // Hide gallery page
+            document.getElementById('galleryPage').classList.remove('active');
+
+            // Build collage overlay
+            const overlay = document.createElement('div');
+            overlay.id = 'collageOverlay';
+            overlay.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.92); z-index: 1500;
+                display: flex; flex-direction: column; justify-content: center; align-items: center;
+                gap: 20px; opacity: 0; transition: opacity 0.8s ease;
+            `;
+
+            const title = document.createElement('div');
+            title.textContent = 'وەک موعین لەم گۆرانیە دەڵێت ، وەک پەپولە لەدەورت بگەڕێم';
+            title.style.cssText = `
+                font-family: 'Crimson Text', serif; font-size: 1.8em;
+                color: #a8e6a3; text-align: center; letter-spacing: 1px;
+                text-shadow: 0 0 20px #7cb342;
+            `;
+
+            const grid = document.createElement('div');
+            grid.className = 'video-collage';
+            grid.style.cssText = 'max-width: 800px; width: 90%;';
+
+            collageVideos.forEach(vid => {
+                const v = document.createElement('video');
+                v.src = vid;
+                v.muted = true;        // keep muted — music plays separately
+                v.autoplay = true;
+                v.loop = true;
+                v.setAttribute('playsinline', '');
+                grid.appendChild(v);
+            });
+
+            overlay.appendChild(title);
+            overlay.appendChild(grid);
+            document.body.appendChild(overlay);
+
+            // Fade in
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => { overlay.style.opacity = '1'; });
+            });
+
+            // Show collage after fade in - done
+        }
+    </script>
+</body>
+</html>
